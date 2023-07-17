@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "github.com/dzoniops/user-service/reservation";
+
+package reservation;
+
+// The greeting service definition.
+service ReservationService {
+  // Sends a greeting
+  rpc Reserve(User) returns (RegisterResponse) {}
+  rpc Accept(LoginRequest) returns (LoginResponse) {}
+  rpc Decline(User) returns (Response) {}
+}
+
+

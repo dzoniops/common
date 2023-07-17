@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option go_package = "github.com/dzoniops/user-service/rating";
+
+package rating;
+
+service RatingService {
+  rpc RateHost(Request) returns (Response) {};
+
+  rpc RateAccommodation(Request) returns (Response) {};
+}
