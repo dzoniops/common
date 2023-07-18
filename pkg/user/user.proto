@@ -4,6 +4,8 @@ option go_package = "github.com/dzoniops/user-service/common";
 
 package user;
 
+import "google/protobuf/empty.proto";
+
 // The greeting service definition.
 service UserService {
   // Sends a greeting
@@ -12,7 +14,7 @@ service UserService {
   //rpc Update(RegisterRequest) returns (RegisterResponse) {}
   rpc GetUser(IdRequest) returns (UserResponse) {}
   // rpc UpdateCredentials
-  //rpc Delete() returns (Response) {}
+  rpc Delete(IdRequest) returns (google.protobuf.Empty) {}
   // rpc DeleteGuest
   // rpc DeleteHost
 }
