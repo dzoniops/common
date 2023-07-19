@@ -13,7 +13,8 @@ service ReservationService {
   //rpc Reserve(User) returns (RegisterResponse) {}
   //rpc Accept(LoginRequest) returns (LoginResponse) {}
   //rpc Decline(User) returns (Response) {}
-  rpc ActivateReservationsGuest(IdRequest) returns (ActiveReservationsGuestResponse) {}
+  rpc ActivateReservationsGuest(IdRequest) returns (ActiveReservationsResponse) {}
+  rpc ActivateReservationsHost(IdRequest) returns (ActiveReservationsResponse) {}
 }
 
 enum ReservationStatus {
@@ -30,7 +31,6 @@ message IdRequest {
 
 
 message Reservation {
-
   int64 accommodation_id = 1;
   google.protobuf.Timestamp start_date = 2;
   google.protobuf.Timestamp end_date = 3;
@@ -39,7 +39,7 @@ message Reservation {
   
 }
 
-message ActiveReservationsGuestResponse {
+message ActiveReservationsResponse {
  repeated Reservation reservations = 1; 
 }
 

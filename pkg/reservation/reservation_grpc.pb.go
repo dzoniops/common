@@ -26,7 +26,8 @@ type ReservationServiceClient interface {
 	// rpc Reserve(User) returns (RegisterResponse) {}
 	// rpc Accept(LoginRequest) returns (LoginResponse) {}
 	// rpc Decline(User) returns (Response) {}
-	ActivateReservationsGuest(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*ActiveReservationsGuestResponse, error)
+	ActivateReservationsGuest(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*ActiveReservationsResponse, error)
+	ActivateReservationsHost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*ActiveReservationsResponse, error)
 }
 
 type reservationServiceClient struct {
@@ -37,9 +38,18 @@ func NewReservationServiceClient(cc grpc.ClientConnInterface) ReservationService
 	return &reservationServiceClient{cc}
 }
 
-func (c *reservationServiceClient) ActivateReservationsGuest(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*ActiveReservationsGuestResponse, error) {
-	out := new(ActiveReservationsGuestResponse)
+func (c *reservationServiceClient) ActivateReservationsGuest(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*ActiveReservationsResponse, error) {
+	out := new(ActiveReservationsResponse)
 	err := c.cc.Invoke(ctx, "/reservation.ReservationService/ActivateReservationsGuest", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *reservationServiceClient) ActivateReservationsHost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*ActiveReservationsResponse, error) {
+	out := new(ActiveReservationsResponse)
+	err := c.cc.Invoke(ctx, "/reservation.ReservationService/ActivateReservationsHost", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +64,8 @@ type ReservationServiceServer interface {
 	// rpc Reserve(User) returns (RegisterResponse) {}
 	// rpc Accept(LoginRequest) returns (LoginResponse) {}
 	// rpc Decline(User) returns (Response) {}
-	ActivateReservationsGuest(context.Context, *IdRequest) (*ActiveReservationsGuestResponse, error)
+	ActivateReservationsGuest(context.Context, *IdRequest) (*ActiveReservationsResponse, error)
+	ActivateReservationsHost(context.Context, *IdRequest) (*ActiveReservationsResponse, error)
 	mustEmbedUnimplementedReservationServiceServer()
 }
 
@@ -62,8 +73,11 @@ type ReservationServiceServer interface {
 type UnimplementedReservationServiceServer struct {
 }
 
-func (UnimplementedReservationServiceServer) ActivateReservationsGuest(context.Context, *IdRequest) (*ActiveReservationsGuestResponse, error) {
+func (UnimplementedReservationServiceServer) ActivateReservationsGuest(context.Context, *IdRequest) (*ActiveReservationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ActivateReservationsGuest not implemented")
+}
+func (UnimplementedReservationServiceServer) ActivateReservationsHost(context.Context, *IdRequest) (*ActiveReservationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ActivateReservationsHost not implemented")
 }
 func (UnimplementedReservationServiceServer) mustEmbedUnimplementedReservationServiceServer() {}
 
@@ -96,6 +110,24 @@ func _ReservationService_ActivateReservationsGuest_Handler(srv interface{}, ctx 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ReservationService_ActivateReservationsHost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReservationServiceServer).ActivateReservationsHost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/reservation.ReservationService/ActivateReservationsHost",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReservationServiceServer).ActivateReservationsHost(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ReservationService_ServiceDesc is the grpc.ServiceDesc for ReservationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -106,6 +138,10 @@ var ReservationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ActivateReservationsGuest",
 			Handler:    _ReservationService_ActivateReservationsGuest_Handler,
+		},
+		{
+			MethodName: "ActivateReservationsHost",
+			Handler:    _ReservationService_ActivateReservationsHost_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
