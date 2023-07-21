@@ -6,6 +6,7 @@ package accommodation;
 
 service AccommodationService {
   rpc CreateAccommodation(AccommodationRequest) returns (AccommodationResponse) {};
+  rpc GetAccommodationById(AccommodationResponse) returns (AccommodationInfo) {};
 }
 //
 
@@ -29,4 +30,25 @@ message AccommodationImage{
 
 message AccommodationResponse{ 
   int64 accommodation_id = 1;
+}
+
+message AccommodationInfo{
+  int64 host_id = 1;
+  string name = 2;
+  string town = 3;
+  string municipality = 4;
+  string country = 5;
+  string amenities = 6;
+  int64 min_guests = 7;
+  int64 max_guests = 8;
+  string pricing_model = 9;
+  string reservation_model = 10;
+  repeated AccommodationImageResponse images = 11;
+  int64 id = 12;
+}
+
+message AccommodationImageResponse{ 
+  string b64img = 1;
+  int64 image_id =2;
+  int64 accommodation_id =3;
 }
