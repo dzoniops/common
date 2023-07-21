@@ -59,8 +59,7 @@ message AccommodationSearchRequest{
   string town = 1;
   string municipality = 2;
   string country = 3;
-  int64 min_guests = 4;
-  int64 max_guests = 5;
+  int64 guest_count = 4;
 }
 
 message AccommodationSearchResponse{
