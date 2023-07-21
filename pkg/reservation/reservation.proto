@@ -10,7 +10,7 @@ import "google/protobuf/timestamp.proto";
 // The greeting service definition.
 service ReservationService {
   // Sends a greeting
-  //rpc Reserve(User) returns (RegisterResponse) {}
+  rpc Reserve(ReserveRequest) returns (ReserveResponse) {}
   //rpc Accept(LoginRequest) returns (LoginResponse) {}
   //rpc Decline(User) returns (Response) {}
   rpc ActivateReservationsGuest(IdRequest) returns (ActiveReservationsResponse) {}
@@ -24,19 +24,26 @@ enum ReservationStatus {
   RESERVATION_STATUS_DECLINED = 3;
 }
 
-message IdRequest {
-  int64 id = 1;
-}
-
-
-
 message Reservation {
   int64 accommodation_id = 1;
   google.protobuf.Timestamp start_date = 2;
   google.protobuf.Timestamp end_date = 3;
   int64 number_of_guests = 4;
-  ReservationStatus status = 5;
-  
+  ReservationStatus status = 5; 
+}
+
+
+
+message ReserveRequest {
+  int64 user_id = 1;
+  Reservation reservation = 2;
+}
+message ReserveResponse {
+  int64 reservation_id = 1;
+}
+
+message IdRequest {
+  int64 id = 1;
 }
 
 message ActiveReservationsResponse {

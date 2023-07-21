@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ReservationServiceClient interface {
 	// Sends a greeting
-	// rpc Reserve(User) returns (RegisterResponse) {}
+	Reserve(ctx context.Context, in *ReserveRequest, opts ...grpc.CallOption) (*ReserveResponse, error)
 	// rpc Accept(LoginRequest) returns (LoginResponse) {}
 	// rpc Decline(User) returns (Response) {}
 	ActivateReservationsGuest(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*ActiveReservationsResponse, error)
@@ -36,6 +36,15 @@ type reservationServiceClient struct {
 
 func NewReservationServiceClient(cc grpc.ClientConnInterface) ReservationServiceClient {
 	return &reservationServiceClient{cc}
+}
+
+func (c *reservationServiceClient) Reserve(ctx context.Context, in *ReserveRequest, opts ...grpc.CallOption) (*ReserveResponse, error) {
+	out := new(ReserveResponse)
+	err := c.cc.Invoke(ctx, "/reservation.ReservationService/Reserve", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *reservationServiceClient) ActivateReservationsGuest(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*ActiveReservationsResponse, error) {
@@ -61,7 +70,7 @@ func (c *reservationServiceClient) ActivateReservationsHost(ctx context.Context,
 // for forward compatibility
 type ReservationServiceServer interface {
 	// Sends a greeting
-	// rpc Reserve(User) returns (RegisterResponse) {}
+	Reserve(context.Context, *ReserveRequest) (*ReserveResponse, error)
 	// rpc Accept(LoginRequest) returns (LoginResponse) {}
 	// rpc Decline(User) returns (Response) {}
 	ActivateReservationsGuest(context.Context, *IdRequest) (*ActiveReservationsResponse, error)
@@ -73,6 +82,9 @@ type ReservationServiceServer interface {
 type UnimplementedReservationServiceServer struct {
 }
 
+func (UnimplementedReservationServiceServer) Reserve(context.Context, *ReserveRequest) (*ReserveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Reserve not implemented")
+}
 func (UnimplementedReservationServiceServer) ActivateReservationsGuest(context.Context, *IdRequest) (*ActiveReservationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ActivateReservationsGuest not implemented")
 }
@@ -90,6 +102,24 @@ type UnsafeReservationServiceServer interface {
 
 func RegisterReservationServiceServer(s grpc.ServiceRegistrar, srv ReservationServiceServer) {
 	s.RegisterService(&ReservationService_ServiceDesc, srv)
+}
+
+func _ReservationService_Reserve_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReserveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReservationServiceServer).Reserve(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/reservation.ReservationService/Reserve",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReservationServiceServer).Reserve(ctx, req.(*ReserveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ReservationService_ActivateReservationsGuest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -135,6 +165,10 @@ var ReservationService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "reservation.ReservationService",
 	HandlerType: (*ReservationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Reserve",
+			Handler:    _ReservationService_Reserve_Handler,
+		},
 		{
 			MethodName: "ActivateReservationsGuest",
 			Handler:    _ReservationService_ActivateReservationsGuest_Handler,
