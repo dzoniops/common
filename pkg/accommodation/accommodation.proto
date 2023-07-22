@@ -11,7 +11,18 @@ service AccommodationService {
 }
 //
 
+enum PricingModel {
+  PRICING_MODEL_UNSPECIFIED = 0;
+  PRICING_MODEL_PUPN = 1;
+  PRICING_MODEL_PGPN = 2;
+}
 
+
+enum ReservationModel {
+  RESERVATION_MODEL_UNSPECIFIED = 0;
+  RESERVATION_MODEL_AUTO = 1;
+  RESERVATION_MODEL_MANUAL = 2;
+}
 message AccommodationRequest{
   int64 host_id = 1;
   string name = 2;
@@ -21,8 +32,8 @@ message AccommodationRequest{
   string amenities = 6;
   int64 min_guests = 7;
   int64 max_guests = 8;
-  string pricing_model = 9;
-  string reservation_model = 10;
+  PricingModel pricing_model = 9;
+  ReservationModel reservation_model = 10;
   repeated AccommodationImage images = 11;
 }
 
