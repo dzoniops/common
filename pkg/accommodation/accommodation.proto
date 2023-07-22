@@ -54,8 +54,8 @@ message AccommodationInfo{
   string amenities = 6;
   int64 min_guests = 7;
   int64 max_guests = 8;
-  string pricing_model = 9;
-  string reservation_model = 10;
+  PricingModel pricing_model = 9;
+  ReservationModel reservation_model = 10;
   repeated AccommodationImageResponse images = 11;
   int64 id = 12;
 }
