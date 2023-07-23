@@ -13,6 +13,7 @@ service ReservationService {
   rpc Reserve(ReserveRequest) returns (ReserveResponse) {}
   //rpc Accept(LoginRequest) returns (LoginResponse) {}
   //rpc Decline(User) returns (Response) {}
+  rpc GetCurrentTime(IdRequest) returns (CurrentTimeResponse) {}
   rpc ActivateReservationsGuest(IdRequest) returns (ActiveReservationsResponse) {}
   rpc ActivateReservationsHost(IdRequest) returns (ActiveReservationsResponse) {}
 }
@@ -22,6 +23,12 @@ enum ReservationStatus {
   RESERVATION_STATUS_ACTIVE = 1;
   RESERVATION_STATUS_ACCEPTED = 2;
   RESERVATION_STATUS_DECLINED = 3;
+}
+
+
+message CurrentTimeResponse {
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
 }
 
 message Reservation {
