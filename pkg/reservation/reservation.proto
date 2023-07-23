@@ -6,16 +6,16 @@ option go_package = "github.com/dzoniops/common/pkg/reservation";
 package reservation;
 
 import "google/protobuf/timestamp.proto";
-
+import "google/protobuf/empty.proto";
 // The greeting service definition.
 service ReservationService {
   // Sends a greeting
   rpc Reserve(ReserveRequest) returns (ReserveResponse) {}
-  //rpc Accept(LoginRequest) returns (LoginResponse) {}
-  //rpc Decline(User) returns (Response) {}
-  rpc GetCurrentTime(IdRequest) returns (CurrentTimeResponse) {}
-  rpc ActivateReservationsGuest(IdRequest) returns (ActiveReservationsResponse) {}
-  rpc ActivateReservationsHost(IdRequest) returns (ActiveReservationsResponse) {}
+  rpc DeleteReservation(IdRequest) returns (google.protobuf.Empty) {}
+  rpc Accept(IdRequest) returns (ReserveResponse) {}
+  rpc Decline(IdRequest) returns (ReserveResponse) {}
+  rpc ActiveReservationsGuest(IdRequest) returns (ActiveReservationsResponse) {}
+  rpc ActiveReservationsHost(IdRequest) returns (ActiveReservationsResponse) {}
 }
 
 enum ReservationStatus {
@@ -25,11 +25,6 @@ enum ReservationStatus {
   RESERVATION_STATUS_DECLINED = 3;
 }
 
-
-message CurrentTimeResponse {
-  google.protobuf.Timestamp start_date = 2;
-  google.protobuf.Timestamp end_date = 3;
-}
 
 message Reservation {
   int64 accommodation_id = 1;
