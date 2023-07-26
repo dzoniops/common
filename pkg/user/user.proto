@@ -18,7 +18,7 @@ service UserService {
 }
 
 message PasswordRequest {
-  int64 id = 1;
+  string username = 1;
   string old_password = 2;
   string new_password = 3;
 }
@@ -60,7 +60,6 @@ message RegisterResponse {
 message LoginRequest {
   string username = 1;
   string password = 2;
-  IdRequest id_request = 3;
 }
 
 message LoginResponse {
