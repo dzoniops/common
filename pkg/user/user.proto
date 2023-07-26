@@ -11,17 +11,28 @@ service UserService {
   // Sends a greeting
   rpc Register(RegisterRequest) returns (RegisterResponse) {}
   rpc Login(LoginRequest) returns (LoginResponse) {}
-  //rpc Update(RegisterRequest) returns (RegisterResponse) {}
+  rpc Update(UserUpdateRequest) returns (RegisterResponse) {}
+  rpc UpdatePassword(PasswordRequest) returns (google.protobuf.Empty) {}
   rpc GetUser(IdRequest) returns (UserResponse) {}
-  // rpc UpdateCredentials
   rpc Delete(IdRequest) returns (google.protobuf.Empty) {}
-  // rpc DeleteGuest
-  // rpc DeleteHost
+}
+
+message PasswordRequest {
+  int64 id = 1;
+  string old_password = 2;
+  string new_password = 3;
 }
 
 message IdRequest {
   int64 id = 1;
-} 
+}
+message UserUpdateRequest {
+  string name = 1;
+  string surname = 2;
+  string email = 3;
+  string username = 4;
+  string place_of_living = 5;
+}
 message UserResponse {
   string name = 1;
   string surname = 2;
