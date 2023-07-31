@@ -4,10 +4,14 @@ option go_package = "github.com/dzoniops/common/pkg/accommodation";
 
 package accommodation;
 
+import "google/protobuf/empty.proto";
+
+
 service AccommodationService {
   rpc CreateAccommodation(AccommodationRequest) returns (AccommodationResponse) {};
   rpc GetAccommodationById(AccommodationResponse) returns (AccommodationInfo) {};
   rpc AccommodationSearch(AccommodationSearchRequest) returns (AccommodationSearchResponse) {};
+  rpc DeleteByHost(IdRequest) returns (google.protobuf.Empty) {};
 }
 //
 
@@ -23,6 +27,11 @@ enum ReservationModel {
   RESERVATION_MODEL_AUTO = 1;
   RESERVATION_MODEL_MANUAL = 2;
 }
+
+message IdRequest {
+  int64 id = 1;
+}
+
 message AccommodationRequest{
   int64 host_id = 1;
   string name = 2;

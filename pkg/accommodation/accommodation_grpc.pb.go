@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -25,6 +26,7 @@ type AccommodationServiceClient interface {
 	CreateAccommodation(ctx context.Context, in *AccommodationRequest, opts ...grpc.CallOption) (*AccommodationResponse, error)
 	GetAccommodationById(ctx context.Context, in *AccommodationResponse, opts ...grpc.CallOption) (*AccommodationInfo, error)
 	AccommodationSearch(ctx context.Context, in *AccommodationSearchRequest, opts ...grpc.CallOption) (*AccommodationSearchResponse, error)
+	DeleteByHost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type accommodationServiceClient struct {
@@ -62,6 +64,15 @@ func (c *accommodationServiceClient) AccommodationSearch(ctx context.Context, in
 	return out, nil
 }
 
+func (c *accommodationServiceClient) DeleteByHost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/accommodation.AccommodationService/DeleteByHost", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccommodationServiceServer is the server API for AccommodationService service.
 // All implementations must embed UnimplementedAccommodationServiceServer
 // for forward compatibility
@@ -69,6 +80,7 @@ type AccommodationServiceServer interface {
 	CreateAccommodation(context.Context, *AccommodationRequest) (*AccommodationResponse, error)
 	GetAccommodationById(context.Context, *AccommodationResponse) (*AccommodationInfo, error)
 	AccommodationSearch(context.Context, *AccommodationSearchRequest) (*AccommodationSearchResponse, error)
+	DeleteByHost(context.Context, *IdRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedAccommodationServiceServer()
 }
 
@@ -84,6 +96,9 @@ func (UnimplementedAccommodationServiceServer) GetAccommodationById(context.Cont
 }
 func (UnimplementedAccommodationServiceServer) AccommodationSearch(context.Context, *AccommodationSearchRequest) (*AccommodationSearchResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AccommodationSearch not implemented")
+}
+func (UnimplementedAccommodationServiceServer) DeleteByHost(context.Context, *IdRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteByHost not implemented")
 }
 func (UnimplementedAccommodationServiceServer) mustEmbedUnimplementedAccommodationServiceServer() {}
 
@@ -152,6 +167,24 @@ func _AccommodationService_AccommodationSearch_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccommodationService_DeleteByHost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccommodationServiceServer).DeleteByHost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/accommodation.AccommodationService/DeleteByHost",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccommodationServiceServer).DeleteByHost(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccommodationService_ServiceDesc is the grpc.ServiceDesc for AccommodationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +203,10 @@ var AccommodationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AccommodationSearch",
 			Handler:    _AccommodationService_AccommodationSearch_Handler,
+		},
+		{
+			MethodName: "DeleteByHost",
+			Handler:    _AccommodationService_DeleteByHost_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
