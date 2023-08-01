@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option go_package = "github.com/dzoniops/common/pkg/notification";
+
+package notification;
+
+service NotificationService {
+	rpc RequestReservation(NotificationRequest) returns (NotificationResponse) {}	
+	rpc UpdateUserPreferences(UserPreferences) returns (UserPreferences) {}
+// rpc CancelReservation() returns () {}
+		// rpc RateHost() returns () {}
+		// rpc RateAccommodation() returns () {}
+		// rpc AnswerReservation() returns () {}
+}
+message UserPreferences {
+	bool create_new_reservation = 1;
+	bool cancel_reservation = 2;
+	bool rate_host = 3;
+	bool rate_accommodation = 4;
+	bool reservation_answer = 5;
+}
+
+message NotificationRequest {	
+
+}
+
+message NotificationResponse {
+
+}
