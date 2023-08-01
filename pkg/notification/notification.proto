@@ -18,6 +18,7 @@ message UserPreferences {
 	bool rate_host = 3;
 	bool rate_accommodation = 4;
 	bool reservation_answer = 5;
+	int64 user_id = 6;
 }
 
 message NotificationRequest {	
