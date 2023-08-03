@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type NotificationServiceClient interface {
 	RequestReservation(ctx context.Context, in *NotificationRequest, opts ...grpc.CallOption) (*NotificationResponse, error)
 	UpdateUserPreferences(ctx context.Context, in *UserPreferences, opts ...grpc.CallOption) (*UserPreferences, error)
+	CreateUserPreferences(ctx context.Context, in *UserPreferences, opts ...grpc.CallOption) (*UserPreferences, error)
 }
 
 type notificationServiceClient struct {
@@ -52,12 +53,22 @@ func (c *notificationServiceClient) UpdateUserPreferences(ctx context.Context, i
 	return out, nil
 }
 
+func (c *notificationServiceClient) CreateUserPreferences(ctx context.Context, in *UserPreferences, opts ...grpc.CallOption) (*UserPreferences, error) {
+	out := new(UserPreferences)
+	err := c.cc.Invoke(ctx, "/notification.NotificationService/CreateUserPreferences", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NotificationServiceServer is the server API for NotificationService service.
 // All implementations must embed UnimplementedNotificationServiceServer
 // for forward compatibility
 type NotificationServiceServer interface {
 	RequestReservation(context.Context, *NotificationRequest) (*NotificationResponse, error)
 	UpdateUserPreferences(context.Context, *UserPreferences) (*UserPreferences, error)
+	CreateUserPreferences(context.Context, *UserPreferences) (*UserPreferences, error)
 	mustEmbedUnimplementedNotificationServiceServer()
 }
 
@@ -70,6 +81,9 @@ func (UnimplementedNotificationServiceServer) RequestReservation(context.Context
 }
 func (UnimplementedNotificationServiceServer) UpdateUserPreferences(context.Context, *UserPreferences) (*UserPreferences, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserPreferences not implemented")
+}
+func (UnimplementedNotificationServiceServer) CreateUserPreferences(context.Context, *UserPreferences) (*UserPreferences, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateUserPreferences not implemented")
 }
 func (UnimplementedNotificationServiceServer) mustEmbedUnimplementedNotificationServiceServer() {}
 
@@ -120,6 +134,24 @@ func _NotificationService_UpdateUserPreferences_Handler(srv interface{}, ctx con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NotificationService_CreateUserPreferences_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserPreferences)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotificationServiceServer).CreateUserPreferences(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/notification.NotificationService/CreateUserPreferences",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotificationServiceServer).CreateUserPreferences(ctx, req.(*UserPreferences))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // NotificationService_ServiceDesc is the grpc.ServiceDesc for NotificationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +166,10 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUserPreferences",
 			Handler:    _NotificationService_UpdateUserPreferences_Handler,
+		},
+		{
+			MethodName: "CreateUserPreferences",
+			Handler:    _NotificationService_CreateUserPreferences_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

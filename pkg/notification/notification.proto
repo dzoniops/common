@@ -7,6 +7,7 @@ package notification;
 service NotificationService {
 	rpc RequestReservation(NotificationRequest) returns (NotificationResponse) {}	
 	rpc UpdateUserPreferences(UserPreferences) returns (UserPreferences) {}
+	rpc CreateUserPreferences(UserPreferences) returns (UserPreferences) {}
 // rpc CancelReservation() returns () {}
 		// rpc RateHost() returns () {}
 		// rpc RateAccommodation() returns () {}
