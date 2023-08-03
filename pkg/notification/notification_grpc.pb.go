@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NotificationServiceClient interface {
-	RequestReservation(ctx context.Context, in *NotificationRequest, opts ...grpc.CallOption) (*NotificationResponse, error)
+	RequestReservation(ctx context.Context, in *RequestReservationNotification, opts ...grpc.CallOption) (*NotificationResponse, error)
 	UpdateUserPreferences(ctx context.Context, in *UserPreferences, opts ...grpc.CallOption) (*UserPreferences, error)
 	CreateUserPreferences(ctx context.Context, in *UserPreferences, opts ...grpc.CallOption) (*UserPreferences, error)
 }
@@ -35,7 +35,7 @@ func NewNotificationServiceClient(cc grpc.ClientConnInterface) NotificationServi
 	return &notificationServiceClient{cc}
 }
 
-func (c *notificationServiceClient) RequestReservation(ctx context.Context, in *NotificationRequest, opts ...grpc.CallOption) (*NotificationResponse, error) {
+func (c *notificationServiceClient) RequestReservation(ctx context.Context, in *RequestReservationNotification, opts ...grpc.CallOption) (*NotificationResponse, error) {
 	out := new(NotificationResponse)
 	err := c.cc.Invoke(ctx, "/notification.NotificationService/RequestReservation", in, out, opts...)
 	if err != nil {
@@ -66,7 +66,7 @@ func (c *notificationServiceClient) CreateUserPreferences(ctx context.Context, i
 // All implementations must embed UnimplementedNotificationServiceServer
 // for forward compatibility
 type NotificationServiceServer interface {
-	RequestReservation(context.Context, *NotificationRequest) (*NotificationResponse, error)
+	RequestReservation(context.Context, *RequestReservationNotification) (*NotificationResponse, error)
 	UpdateUserPreferences(context.Context, *UserPreferences) (*UserPreferences, error)
 	CreateUserPreferences(context.Context, *UserPreferences) (*UserPreferences, error)
 	mustEmbedUnimplementedNotificationServiceServer()
@@ -76,7 +76,7 @@ type NotificationServiceServer interface {
 type UnimplementedNotificationServiceServer struct {
 }
 
-func (UnimplementedNotificationServiceServer) RequestReservation(context.Context, *NotificationRequest) (*NotificationResponse, error) {
+func (UnimplementedNotificationServiceServer) RequestReservation(context.Context, *RequestReservationNotification) (*NotificationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequestReservation not implemented")
 }
 func (UnimplementedNotificationServiceServer) UpdateUserPreferences(context.Context, *UserPreferences) (*UserPreferences, error) {
@@ -99,7 +99,7 @@ func RegisterNotificationServiceServer(s grpc.ServiceRegistrar, srv Notification
 }
 
 func _NotificationService_RequestReservation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NotificationRequest)
+	in := new(RequestReservationNotification)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func _NotificationService_RequestReservation_Handler(srv interface{}, ctx contex
 		FullMethod: "/notification.NotificationService/RequestReservation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NotificationServiceServer).RequestReservation(ctx, req.(*NotificationRequest))
+		return srv.(NotificationServiceServer).RequestReservation(ctx, req.(*RequestReservationNotification))
 	}
 	return interceptor(ctx, in, info, handler)
 }
