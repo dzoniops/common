@@ -8,6 +8,7 @@ service NotificationService {
 	rpc RequestReservation(RequestReservationNotification) returns (NotificationResponse) {}	
 	rpc UpdateUserPreferences(UserPreferences) returns (UserPreferences) {}
 	rpc CreateUserPreferences(UserPreferences) returns (UserPreferences) {}
+	rpc Notify(RequestReservationNotification) returns (stream NotificationResponse) {}
 // rpc CancelReservation() returns () {}
 		// rpc RateHost() returns () {}
 		// rpc RateAccommodation() returns () {}

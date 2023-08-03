@@ -25,6 +25,7 @@ type NotificationServiceClient interface {
 	RequestReservation(ctx context.Context, in *RequestReservationNotification, opts ...grpc.CallOption) (*NotificationResponse, error)
 	UpdateUserPreferences(ctx context.Context, in *UserPreferences, opts ...grpc.CallOption) (*UserPreferences, error)
 	CreateUserPreferences(ctx context.Context, in *UserPreferences, opts ...grpc.CallOption) (*UserPreferences, error)
+	Notify(ctx context.Context, in *RequestReservationNotification, opts ...grpc.CallOption) (NotificationService_NotifyClient, error)
 }
 
 type notificationServiceClient struct {
@@ -62,6 +63,38 @@ func (c *notificationServiceClient) CreateUserPreferences(ctx context.Context, i
 	return out, nil
 }
 
+func (c *notificationServiceClient) Notify(ctx context.Context, in *RequestReservationNotification, opts ...grpc.CallOption) (NotificationService_NotifyClient, error) {
+	stream, err := c.cc.NewStream(ctx, &NotificationService_ServiceDesc.Streams[0], "/notification.NotificationService/Notify", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &notificationServiceNotifyClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type NotificationService_NotifyClient interface {
+	Recv() (*NotificationResponse, error)
+	grpc.ClientStream
+}
+
+type notificationServiceNotifyClient struct {
+	grpc.ClientStream
+}
+
+func (x *notificationServiceNotifyClient) Recv() (*NotificationResponse, error) {
+	m := new(NotificationResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // NotificationServiceServer is the server API for NotificationService service.
 // All implementations must embed UnimplementedNotificationServiceServer
 // for forward compatibility
@@ -69,6 +102,7 @@ type NotificationServiceServer interface {
 	RequestReservation(context.Context, *RequestReservationNotification) (*NotificationResponse, error)
 	UpdateUserPreferences(context.Context, *UserPreferences) (*UserPreferences, error)
 	CreateUserPreferences(context.Context, *UserPreferences) (*UserPreferences, error)
+	Notify(*RequestReservationNotification, NotificationService_NotifyServer) error
 	mustEmbedUnimplementedNotificationServiceServer()
 }
 
@@ -84,6 +118,9 @@ func (UnimplementedNotificationServiceServer) UpdateUserPreferences(context.Cont
 }
 func (UnimplementedNotificationServiceServer) CreateUserPreferences(context.Context, *UserPreferences) (*UserPreferences, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUserPreferences not implemented")
+}
+func (UnimplementedNotificationServiceServer) Notify(*RequestReservationNotification, NotificationService_NotifyServer) error {
+	return status.Errorf(codes.Unimplemented, "method Notify not implemented")
 }
 func (UnimplementedNotificationServiceServer) mustEmbedUnimplementedNotificationServiceServer() {}
 
@@ -152,6 +189,27 @@ func _NotificationService_CreateUserPreferences_Handler(srv interface{}, ctx con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NotificationService_Notify_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(RequestReservationNotification)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(NotificationServiceServer).Notify(m, &notificationServiceNotifyServer{stream})
+}
+
+type NotificationService_NotifyServer interface {
+	Send(*NotificationResponse) error
+	grpc.ServerStream
+}
+
+type notificationServiceNotifyServer struct {
+	grpc.ServerStream
+}
+
+func (x *notificationServiceNotifyServer) Send(m *NotificationResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // NotificationService_ServiceDesc is the grpc.ServiceDesc for NotificationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -172,6 +230,12 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _NotificationService_CreateUserPreferences_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Notify",
+			Handler:       _NotificationService_Notify_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "pkg/notification/notification.proto",
 }
