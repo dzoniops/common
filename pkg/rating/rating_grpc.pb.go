@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RatingServiceClient interface {
 	RateHost(ctx context.Context, in *RateHostRequest, opts ...grpc.CallOption) (*RateHostResponse, error)
-	RateAccommodation(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
+	RateAccommodation(ctx context.Context, in *RateAccommodationRequest, opts ...grpc.CallOption) (*RateAccommodationResponse, error)
 }
 
 type ratingServiceClient struct {
@@ -43,8 +43,8 @@ func (c *ratingServiceClient) RateHost(ctx context.Context, in *RateHostRequest,
 	return out, nil
 }
 
-func (c *ratingServiceClient) RateAccommodation(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
-	out := new(Response)
+func (c *ratingServiceClient) RateAccommodation(ctx context.Context, in *RateAccommodationRequest, opts ...grpc.CallOption) (*RateAccommodationResponse, error) {
+	out := new(RateAccommodationResponse)
 	err := c.cc.Invoke(ctx, "/rating.RatingService/RateAccommodation", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func (c *ratingServiceClient) RateAccommodation(ctx context.Context, in *Request
 // for forward compatibility
 type RatingServiceServer interface {
 	RateHost(context.Context, *RateHostRequest) (*RateHostResponse, error)
-	RateAccommodation(context.Context, *Request) (*Response, error)
+	RateAccommodation(context.Context, *RateAccommodationRequest) (*RateAccommodationResponse, error)
 	mustEmbedUnimplementedRatingServiceServer()
 }
 
@@ -68,7 +68,7 @@ type UnimplementedRatingServiceServer struct {
 func (UnimplementedRatingServiceServer) RateHost(context.Context, *RateHostRequest) (*RateHostResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RateHost not implemented")
 }
-func (UnimplementedRatingServiceServer) RateAccommodation(context.Context, *Request) (*Response, error) {
+func (UnimplementedRatingServiceServer) RateAccommodation(context.Context, *RateAccommodationRequest) (*RateAccommodationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RateAccommodation not implemented")
 }
 func (UnimplementedRatingServiceServer) mustEmbedUnimplementedRatingServiceServer() {}
@@ -103,7 +103,7 @@ func _RatingService_RateHost_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _RatingService_RateAccommodation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Request)
+	in := new(RateAccommodationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -115,7 +115,7 @@ func _RatingService_RateAccommodation_Handler(srv interface{}, ctx context.Conte
 		FullMethod: "/rating.RatingService/RateAccommodation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RatingServiceServer).RateAccommodation(ctx, req.(*Request))
+		return srv.(RatingServiceServer).RateAccommodation(ctx, req.(*RateAccommodationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

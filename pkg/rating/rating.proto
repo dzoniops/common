@@ -6,7 +6,7 @@ package rating;
 
 service RatingService {
   rpc RateHost(RateHostRequest) returns (RateHostResponse) {};
-  rpc RateAccommodation(Request) returns (Response) {};
+  rpc RateAccommodation(RateAccommodationRequest) returns (RateAccommodationResponse) {};
 }
 
 
@@ -16,6 +16,17 @@ message Request {
 message Response {
   
 }
+message RateAccommodationRequest {
+  int64 userId = 1;
+  int64 accommodationId = 2;
+  int64 grade = 3;
+}
+
+message RateAccommodationResponse {
+  int64 userId = 1;
+  int64 accommodationId = 2;
+  int64 grade = 3;
+}
 message RateHostRequest {
   int64 userId = 1;
   int64 hostId = 2;
@@ -23,5 +34,7 @@ message RateHostRequest {
 }
 message RateHostResponse {
   int64 hostId = 1;
+  int64 userId = 2;
+  int64 grade = 3;
 
 }
