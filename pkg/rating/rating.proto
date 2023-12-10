@@ -5,7 +5,23 @@ option go_package = "github.com/dzoniops/user-service/rating";
 package rating;
 
 service RatingService {
-  rpc RateHost(Request) returns (Response) {};
-
+  rpc RateHost(RateHostRequest) returns (RateHostResponse) {};
   rpc RateAccommodation(Request) returns (Response) {};
+}
+
+
+message Request {
+
+}
+message Response {
+  
+}
+message RateHostRequest {
+  int64 userId = 1;
+  int64 hostId = 2;
+  int64 grade = 3;
+}
+message RateHostResponse {
+  int64 hostId = 1;
+
 }
