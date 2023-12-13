@@ -5,6 +5,7 @@ option go_package = "github.com/dzoniops/common/pkg/accommodation";
 package accommodation;
 
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
 
 service AccommodationService {
@@ -46,11 +47,11 @@ message AccommodationRequest{
   repeated AccommodationImage images = 11;
 }
 
-message AccommodationImage{ 
+message AccommodationImage{
   string b64img = 1;
 }
 
-message AccommodationResponse{ 
+message AccommodationResponse{
   int64 accommodation_id = 1;
 }
 
@@ -69,19 +70,21 @@ message AccommodationInfo{
   int64 id = 12;
 }
 
-message AccommodationImageResponse{ 
+message AccommodationImageResponse{
   string b64img = 1;
-  int64 image_id =2;
-  int64 accommodation_id =3;
+  int64 image_id = 2;
+  int64 accommodation_id = 3;
 }
 
-message AccommodationSearchRequest{ 
+message AccommodationSearchRequest{
   string town = 1;
   string municipality = 2;
   string country = 3;
   int64 guest_count = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
 }
 
 message AccommodationSearchResponse{
-  repeated AccommodationInfo accomomodation_list= 1;
+  repeated AccommodationInfo accomomodation_list = 1;
 }
