@@ -17,6 +17,8 @@ service ReservationService {
   rpc PendingReservationsAccommodation(IdRequest) returns (PendingReservationsResponse) {}
   rpc PendingReservationsHost(IdRequest) returns (PendingReservationsResponse) {}
   rpc PendingReservationsGuest(IdRequest) returns (PendingReservationsResponse) {}
+  rpc EditAvailable(EditAvailableRequest) returns (google.protobuf.Empty)  {}
+  rpc AddAvailable(AddAvailableRequest) returns (google.protobuf.Empty) {}
 }
 
 enum ReservationStatus {
@@ -26,6 +28,19 @@ enum ReservationStatus {
   RESERVATION_STATUS_DECLINED = 3;
 }
 
+message EditAvailableRequest {
+  int64 id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  int64 price = 4;
+  int64 accommodation_id = 5;
+}
+message AddAvailableRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  int64 price = 3;
+  int64 accommodation_id = 4;
+}
 
 message Reservation {
   int64 accommodation_id = 1;
