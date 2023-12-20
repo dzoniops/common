@@ -7,15 +7,16 @@ package reservation;
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
-// The greeting service definition.
 service ReservationService {
-  // Sends a greeting
   rpc Reserve(ReserveRequest) returns (ReserveResponse) {}
   rpc DeleteReservation(IdRequest) returns (google.protobuf.Empty) {}
   rpc Accept(IdRequest) returns (ReserveResponse) {}
   rpc Decline(IdRequest) returns (ReserveResponse) {}
   rpc ActiveReservationsGuest(IdRequest) returns (ActiveReservationsResponse) {}
   rpc ActiveReservationsHost(IdRequest) returns (ActiveReservationsResponse) {}
+  rpc PendingReservationsAccommodation(IdRequest) returns (PendingReservationsResponse) {}
+  rpc PendingReservationsHost(IdRequest) returns (PendingReservationsResponse) {}
+  rpc PendingReservationsGuest(IdRequest) returns (PendingReservationsResponse) {}
 }
 
 enum ReservationStatus {
@@ -50,6 +51,10 @@ message IdRequest {
 }
 
 message ActiveReservationsResponse {
+ repeated Reservation reservations = 1; 
+}
+
+message PendingReservationsResponse {
  repeated Reservation reservations = 1; 
 }
 
