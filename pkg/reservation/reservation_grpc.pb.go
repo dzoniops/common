@@ -35,6 +35,7 @@ type ReservationServiceClient interface {
 	EditAvailable(ctx context.Context, in *EditAvailableRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	AddAvailable(ctx context.Context, in *AddAvailableRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAvailableByAccommodation(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*AvailablesResponse, error)
+	FilterAvailableForAccommodations(ctx context.Context, in *FilterAccommodationRequest, opts ...grpc.CallOption) (*FilterAvailableResponse, error)
 }
 
 type reservationServiceClient struct {
@@ -153,6 +154,15 @@ func (c *reservationServiceClient) GetAvailableByAccommodation(ctx context.Conte
 	return out, nil
 }
 
+func (c *reservationServiceClient) FilterAvailableForAccommodations(ctx context.Context, in *FilterAccommodationRequest, opts ...grpc.CallOption) (*FilterAvailableResponse, error) {
+	out := new(FilterAvailableResponse)
+	err := c.cc.Invoke(ctx, "/reservation.ReservationService/FilterAvailableForAccommodations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ReservationServiceServer is the server API for ReservationService service.
 // All implementations must embed UnimplementedReservationServiceServer
 // for forward compatibility
@@ -169,6 +179,7 @@ type ReservationServiceServer interface {
 	EditAvailable(context.Context, *EditAvailableRequest) (*emptypb.Empty, error)
 	AddAvailable(context.Context, *AddAvailableRequest) (*emptypb.Empty, error)
 	GetAvailableByAccommodation(context.Context, *IdRequest) (*AvailablesResponse, error)
+	FilterAvailableForAccommodations(context.Context, *FilterAccommodationRequest) (*FilterAvailableResponse, error)
 	mustEmbedUnimplementedReservationServiceServer()
 }
 
@@ -211,6 +222,9 @@ func (UnimplementedReservationServiceServer) AddAvailable(context.Context, *AddA
 }
 func (UnimplementedReservationServiceServer) GetAvailableByAccommodation(context.Context, *IdRequest) (*AvailablesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAvailableByAccommodation not implemented")
+}
+func (UnimplementedReservationServiceServer) FilterAvailableForAccommodations(context.Context, *FilterAccommodationRequest) (*FilterAvailableResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FilterAvailableForAccommodations not implemented")
 }
 func (UnimplementedReservationServiceServer) mustEmbedUnimplementedReservationServiceServer() {}
 
@@ -441,6 +455,24 @@ func _ReservationService_GetAvailableByAccommodation_Handler(srv interface{}, ct
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ReservationService_FilterAvailableForAccommodations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FilterAccommodationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReservationServiceServer).FilterAvailableForAccommodations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/reservation.ReservationService/FilterAvailableForAccommodations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReservationServiceServer).FilterAvailableForAccommodations(ctx, req.(*FilterAccommodationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ReservationService_ServiceDesc is the grpc.ServiceDesc for ReservationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -495,6 +527,10 @@ var ReservationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAvailableByAccommodation",
 			Handler:    _ReservationService_GetAvailableByAccommodation_Handler,
+		},
+		{
+			MethodName: "FilterAvailableForAccommodations",
+			Handler:    _ReservationService_FilterAvailableForAccommodations_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
