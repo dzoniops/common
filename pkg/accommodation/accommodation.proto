@@ -69,6 +69,22 @@ message AccommodationInfo{
   repeated AccommodationImageResponse images = 11;
   int64 id = 12;
 }
+message AccommodationSearchInfo {
+  int64 host_id = 1;
+  string name = 2;
+  string town = 3;
+  string municipality = 4;
+  string country = 5;
+  string amenities = 6;
+  int64 min_guests = 7;
+  int64 max_guests = 8;
+  PricingModel pricing_model = 9;
+  ReservationModel reservation_model = 10;
+  repeated AccommodationImageResponse images = 11;
+  int64 id = 12;
+  int64 total_price = 13;
+  //float price_per_person = 14;
+}
 
 message AccommodationImageResponse{
   string b64img = 1;
@@ -86,5 +102,5 @@ message AccommodationSearchRequest{
 }
 
 message AccommodationSearchResponse{
-  repeated AccommodationInfo accomomodation_list = 1;
+  repeated AccommodationSearchInfo accomomodation_list = 1;
 }
