@@ -83,7 +83,8 @@ message AccommodationSearchInfo {
   repeated AccommodationImageResponse images = 11;
   int64 id = 12;
   int64 total_price = 13;
-  //float price_per_person = 14;
+  float price_per_person = 14;
+  float price_per_unit = 15;
 }
 
 message AccommodationImageResponse{
