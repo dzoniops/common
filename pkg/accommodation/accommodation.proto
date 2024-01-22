@@ -13,8 +13,18 @@ service AccommodationService {
   rpc GetAccommodationById(AccommodationResponse) returns (AccommodationInfo) {};
   rpc AccommodationSearch(AccommodationSearchRequest) returns (AccommodationSearchResponse) {};
   rpc DeleteByHost(IdRequest) returns (google.protobuf.Empty) {};
+  rpc Validate(ValidateRequest) returns (ValidateResponse) {}
 }
 //
+
+message ValidateRequest {
+  string accessToken = 1;
+  repeated string roles = 2;
+}
+
+message ValidateResponse {
+  int64 userId = 3;
+}
 
 enum PricingModel {
   PRICING_MODEL_UNSPECIFIED = 0;
