@@ -15,6 +15,16 @@ service UserService {
   rpc UpdatePassword(PasswordRequest) returns (google.protobuf.Empty) {}
   rpc GetUser(IdRequest) returns (UserResponse) {}
   rpc Delete(IdRequest) returns (google.protobuf.Empty) {}
+  rpc Validate(ValidateRequest) returns (ValidateResponse) {}
+}
+
+message ValidateRequest {
+  string accessToken = 1;
+  repeated string roles = 2;
+}
+
+message ValidateResponse {
+  int64 userId = 3;
 }
 
 message PasswordRequest {

@@ -27,7 +27,6 @@ type AccommodationServiceClient interface {
 	GetAccommodationById(ctx context.Context, in *AccommodationResponse, opts ...grpc.CallOption) (*AccommodationInfo, error)
 	AccommodationSearch(ctx context.Context, in *AccommodationSearchRequest, opts ...grpc.CallOption) (*AccommodationSearchResponse, error)
 	DeleteByHost(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Validate(ctx context.Context, in *ValidateRequest, opts ...grpc.CallOption) (*ValidateResponse, error)
 }
 
 type accommodationServiceClient struct {
@@ -74,15 +73,6 @@ func (c *accommodationServiceClient) DeleteByHost(ctx context.Context, in *IdReq
 	return out, nil
 }
 
-func (c *accommodationServiceClient) Validate(ctx context.Context, in *ValidateRequest, opts ...grpc.CallOption) (*ValidateResponse, error) {
-	out := new(ValidateResponse)
-	err := c.cc.Invoke(ctx, "/accommodation.AccommodationService/Validate", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // AccommodationServiceServer is the server API for AccommodationService service.
 // All implementations must embed UnimplementedAccommodationServiceServer
 // for forward compatibility
@@ -91,7 +81,6 @@ type AccommodationServiceServer interface {
 	GetAccommodationById(context.Context, *AccommodationResponse) (*AccommodationInfo, error)
 	AccommodationSearch(context.Context, *AccommodationSearchRequest) (*AccommodationSearchResponse, error)
 	DeleteByHost(context.Context, *IdRequest) (*emptypb.Empty, error)
-	Validate(context.Context, *ValidateRequest) (*ValidateResponse, error)
 	mustEmbedUnimplementedAccommodationServiceServer()
 }
 
@@ -110,9 +99,6 @@ func (UnimplementedAccommodationServiceServer) AccommodationSearch(context.Conte
 }
 func (UnimplementedAccommodationServiceServer) DeleteByHost(context.Context, *IdRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteByHost not implemented")
-}
-func (UnimplementedAccommodationServiceServer) Validate(context.Context, *ValidateRequest) (*ValidateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Validate not implemented")
 }
 func (UnimplementedAccommodationServiceServer) mustEmbedUnimplementedAccommodationServiceServer() {}
 
@@ -199,24 +185,6 @@ func _AccommodationService_DeleteByHost_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AccommodationService_Validate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ValidateRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AccommodationServiceServer).Validate(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/accommodation.AccommodationService/Validate",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccommodationServiceServer).Validate(ctx, req.(*ValidateRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // AccommodationService_ServiceDesc is the grpc.ServiceDesc for AccommodationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -239,10 +207,6 @@ var AccommodationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteByHost",
 			Handler:    _AccommodationService_DeleteByHost_Handler,
-		},
-		{
-			MethodName: "Validate",
-			Handler:    _AccommodationService_Validate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
