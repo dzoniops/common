@@ -24,7 +24,8 @@ message ValidateRequest {
 }
 
 message ValidateResponse {
-  int64 userId = 3;
+  int64 userId = 1;
+  string role = 2;
 }
 
 message PasswordRequest {
