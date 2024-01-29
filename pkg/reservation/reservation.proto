@@ -21,6 +21,7 @@ service ReservationService {
   rpc AddAvailable(AddAvailableRequest) returns (google.protobuf.Empty) {}
   rpc GetAvailableByAccommodation(IdRequest) returns (AvailablesResponse) {}
   rpc FilterAvailableForAccommodations(FilterAccommodationsRequest) returns (FilterAvailableResponse) {}
+  rpc IsAvailable(ReserveRequest) returns (google.protobuf.Empty) {}
 }
 
 enum ReservationStatus {
