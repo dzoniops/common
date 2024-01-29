@@ -75,4 +75,6 @@ message LoginRequest {
 
 message LoginResponse {
   string access_token = 1;
+  string role = 2;
+  string user_id =3;
 }
